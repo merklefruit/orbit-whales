@@ -1,5 +1,5 @@
 {
-  "name": "orbit-whales2",
+  "name": "orbit-whales",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.9",
+    "graphql": "^16.5.0",
     "next": "12.2.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "use-async-memo": "^1.2.4"
   },
   "devDependencies": {
     "@types/node": "18.0.3",
