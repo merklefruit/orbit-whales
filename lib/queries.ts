@@ -9,14 +9,14 @@ import {
 const Client = () => {
   return new ApolloClient({
     link: createHttpLink({
-      uri: "https://api.thegraph.com/subgraphs/name/fel-developers/orbit",
+      uri: "https://api.thegraph.com/subgraphs/name/riccardogalbusera/orbit-subgraph",
     }),
     cache: new InMemoryCache(),
   });
 };
 
 const GET_PROTOCOL_TVL = () => {
-  const factory = "0xB4F9F129d59bD634Fa98d2759ee8c92E9F840802".toLowerCase();
+  const factory = "0x6B8Bc2BF3DCc979082E70D4A9D3854A1FF323dE7".toLowerCase();
   const queryString = `
   query protocolTVL {
     positionManagerFactory(id: "${factory}") {
