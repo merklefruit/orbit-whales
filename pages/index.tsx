@@ -66,7 +66,7 @@ const Home: NextPage = () => {
               padding: "1rem",
             }}
           >
-            <div style={{ width: "650px" }}>
+            <div style={{ width: "650px", paddingTop: "0.5rem" }}>
               {topUsers.map((pm: any, idx: number) => (
                 <a
                   key={idx}
