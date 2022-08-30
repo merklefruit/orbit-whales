@@ -15,8 +15,6 @@ const Home: NextPage = () => {
 
   const topUsers = useAsyncMemo(async () => {
     const res = await getTopUsers();
-    const res2 = await getDegenScore();
-    console.log(res2);
     return res?.positionManagers?.slice(0, 10);
   }, []);
 
@@ -219,7 +217,7 @@ const Home: NextPage = () => {
               {degenScorePos.map((_: any, idx: number) => (
                 <a
                   key={idx}
-                  href={``}
+                  href={`https://polygonscan.com/address/${degenScorePos[idx].user}`}
                   className="position-link"
                   rel="noreferrer noopener"
                   target="_blank"
@@ -250,10 +248,14 @@ const Home: NextPage = () => {
                       <span style={{ fontWeight: "700" }}>RANK: </span>
                       {idx + 1}
                     </span>
+                    <span>
+                      <span style={{ fontWeight: "700" }}>USER: </span>
+                      {degenScorePos[idx].user}
+                    </span>
 
                     <span>
                       <span style={{ fontWeight: "700" }}>DEGEN SCORE: </span>{" "}
-                      {degenScorePos[idx].totalDegen}
+                      {degenScorePos[idx].totalDegen.toFixed(3)}
                     </span>
                   </div>
                 </a>

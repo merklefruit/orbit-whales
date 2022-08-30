@@ -46,7 +46,13 @@ const GET_TOP_POSITIONS = () => {
     positions (orderBy:marketValueUSD, orderDirection:desc) {
       id,
       poolName,
-      marketValueUSD
+      marketValueUSD,
+      tickLower,
+      tickUpper,
+      fee,
+      positionManager {
+        user
+      }
     }
   }
   `;
