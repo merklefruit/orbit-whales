@@ -1,11 +1,11 @@
 import { getTopPositions } from "../lib/queries";
 import { usePools } from "./usePools";
 
-function compareDegen(a: any, b: any) {
-  if (a.totalDegen > b.totalDegen) {
+function compareDegen(a: any, b: any, key: any) {
+  if (a[key] > b[key]) {
     return -1;
   }
-  if (a.totalDegen < b.totalDegen) {
+  if (a[key] < b[key]) {
     return 1;
   }
   return 0;
@@ -60,8 +60,17 @@ export const useDegenScore = () => {
 
       degenScoreArray.push(degenScore);
     });
-    degenScoreArray.sort((a: any, b: any) => compareDegen(a, b));
-    degenScoreArray;
+    degenScoreArray.sort((a: any, b: any) => compareDegen(a, b, "totalDegen"));
+
+    let addressAlreadyFinded: any = {};
+    degenScoreArray = degenScoreArray.filter((val: any) => {
+      if (addressAlreadyFinded[val.user]) null;
+      else {
+        addressAlreadyFinded[val.user] = true;
+        return val;
+      }
+    });
+
     return degenScoreArray;
 
     //sort degenScore of user by highest
