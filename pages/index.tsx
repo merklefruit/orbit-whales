@@ -1,11 +1,13 @@
 import type { NextPage } from "next";
 import { useAsyncMemo } from "use-async-memo";
 import Head from "next/head";
-import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { getProtocolTVL, getTopPositions, getTopUsers } from "../lib/queries";
+import { useDegenScore } from "../hooks/useDegenScore";
+import { useMemo } from "react";
 
 const Home: NextPage = () => {
+  const { getDegenScore } = useDegenScore();
   const protocolTVL = useAsyncMemo(async () => {
     const res = await getProtocolTVL();
     return `$ ${+(+res?.positionManagerFactory?.protocolTVL).toFixed(2)}`;
@@ -13,12 +15,19 @@ const Home: NextPage = () => {
 
   const topUsers = useAsyncMemo(async () => {
     const res = await getTopUsers();
+    const res2 = await getDegenScore();
+    console.log(res2);
     return res?.positionManagers?.slice(0, 10);
   }, []);
 
   const topPositions = useAsyncMemo(async () => {
     const res = await getTopPositions();
     return res?.positions?.slice(0, 10);
+  }, []);
+
+  const degenScorePos: any = useAsyncMemo(async () => {
+    const res = await getDegenScore();
+    return res.slice(0, 10);
   }, []);
 
   return (
@@ -29,7 +38,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {protocolTVL && topUsers && topPositions ? (
+      {protocolTVL && topUsers && topPositions && degenScorePos ? (
         <main className={styles.main}>
           <h1 className={styles.title}>
             Orbit{" "}
@@ -182,6 +191,71 @@ const Home: NextPage = () => {
                     <span style={{ fontWeight: "700" }}>VALUE: </span> ${" "}
                     {+(+pos?.marketValueUSD).toFixed(2)}
                   </span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div style={{ marginTop: "1rem", marginBottom: "1rem" }} />
+
+          <h2
+            style={{
+              margin: "0 30rem -0.7rem 0",
+              fontSize: "1.2rem",
+              backgroundColor: "white",
+              padding: "0 0.3rem 0 0.1rem",
+              zIndex: 1,
+            }}
+          >
+            Top 10 Degen
+          </h2>
+          <div
+            style={{
+              borderRadius: "0.6rem",
+              border: "solid black 2px",
+              padding: "1rem",
+            }}
+          >
+            <div style={{ width: "650px", paddingTop: "0.5rem" }}>
+              {degenScorePos.map((_: any, idx: number) => (
+                <a
+                  key={idx}
+                  href={``}
+                  className="position-link"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  style={{
+                    textAlign: "left",
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: "1.5rem",
+                    border: "1px solid lightgray",
+                    borderRadius: "0.5rem",
+                    padding: "0.5rem",
+                    marginBottom: "0.5rem",
+                    transition: "all 0.2s ease-in-out",
+                    cursor: "pointer",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "start",
+                      gap: "1.5rem",
+                    }}
+                  >
+                    <span>
+                      <span style={{ fontWeight: "700" }}>RANK: </span>
+                      {idx + 1}
+                    </span>
+
+                    <span>
+                      <span style={{ fontWeight: "700" }}>DEGEN SCORE: </span>{" "}
+                      {degenScorePos[idx].totalDegen}
+                    </span>
+                  </div>
                 </a>
               ))}
             </div>
