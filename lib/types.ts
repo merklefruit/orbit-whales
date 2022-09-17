@@ -14,26 +14,30 @@ export type IDegenScore = {
 }
 
 export type IGetTopPositionsQuery = {
-  positions: {
-    id: string
-    poolName: string
-    marketValueUSD: number
-    tickLower: number
-    tickUpper: number
-    fee: number
-    positionManager: {
-      user: string
-    }
-  }[]
+  positions: IPositions
 }
 
-export type IGetTopUsersQuery = {
-  positionManagers: {
-    id: string
+export type IPositions = {
+  id: string
+  poolName: string
+  marketValueUSD: number
+  tickLower: number
+  tickUpper: number
+  fee: number
+  positionManager: {
     user: string
-    totalValueLocked: number
-  }[]
+  }
+}[]
+
+export type IGetTopUsersQuery = {
+  positionManagers: IPositionManagers
 }
+
+export type IPositionManagers = {
+  id: string
+  user: string
+  totalValueLocked: number
+}[]
 
 export type IGetTopPoolsQuery = {
   pools: {
@@ -82,4 +86,10 @@ export type IGetProtocolTvlQuery = {
   positionManagerFactory: {
     protocolTVL: number
   }
+}
+
+export type ILoadDataParams = {
+  resetAll?: boolean
+  showAllUsers?: boolean
+  showAllPositions?: boolean
 }

@@ -1,11 +1,11 @@
-import Head from "next/head";
 import { useAsyncMemo } from "use-async-memo";
+
+import { Title } from "@mantine/core";
 
 import { useDegenScore } from "../hooks/useDegenScore";
 import { getProtocolTVL, getTopPositions, getTopUsers } from "../lib/queries";
 
 import type { NextPage } from 'next'
-
 const Home: NextPage = () => {
   const { getDegenScore } = useDegenScore()
 
@@ -16,30 +16,24 @@ const Home: NextPage = () => {
 
   const topUsers = useAsyncMemo(async () => {
     const res = await getTopUsers()
-    return res?.positionManagers?.slice(0, 10)
+    return res?.positionManagers
   }, [])
 
   const topPositions = useAsyncMemo(async () => {
     const res = await getTopPositions()
-    return res?.positions?.slice(0, 10)
+    return res?.positions
   }, [])
 
   const degenScorePos = useAsyncMemo(async () => {
     const res = await getDegenScore()
-    return res.slice(0, 10)
+    return res
   }, [])
 
   return (
     <div>
-      <Head>
-        <title>Orbit Whales</title>
-        <meta name="description" content="Check out the top whales!" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       {protocolTVL && topUsers && topPositions && degenScorePos ? (
         <main>
-          <h1>
+          <Title order={1}>
             Orbit{' '}
             <a
               href="https://development.orbitdefi.finance/"
@@ -48,7 +42,7 @@ const Home: NextPage = () => {
             >
               Whales
             </a>
-          </h1>
+          </Title>
 
           <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
             <h2 style={{ fontWeight: '700', fontSize: '1.4rem' }}>TVL: {protocolTVL} USD</h2>
