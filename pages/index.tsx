@@ -3,7 +3,6 @@ import { useAsyncMemo } from "use-async-memo";
 
 import { useDegenScore } from "../hooks/useDegenScore";
 import { getProtocolTVL, getTopPositions, getTopUsers } from "../lib/queries";
-import styles from "../styles/Home.module.css";
 
 import type { NextPage } from 'next'
 
@@ -31,7 +30,7 @@ const Home: NextPage = () => {
   }, [])
 
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Orbit Whales</title>
         <meta name="description" content="Check out the top whales!" />
@@ -39,8 +38,8 @@ const Home: NextPage = () => {
       </Head>
 
       {protocolTVL && topUsers && topPositions && degenScorePos ? (
-        <main className={styles.main}>
-          <h1 className={styles.title}>
+        <main>
+          <h1>
             Orbit{' '}
             <a
               href="https://development.orbitdefi.finance/"
@@ -283,8 +282,8 @@ const Home: NextPage = () => {
           </div>
         </main>
       ) : (
-        <main className={styles.main}>
-          <h1 className={styles.title}>Fetching data...</h1>
+        <main>
+          <h1>Fetching data...</h1>
         </main>
       )}
     </div>

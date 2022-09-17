@@ -1,6 +1,6 @@
-import { ApolloClient, createHttpLink, gql, InMemoryCache } from "@apollo/client";
+import { gql } from "@apollo/client";
 
-import Client from "./apolloClient";
+import { OrbitClient, UniswapClient } from "./apolloClient";
 import { PM_FACTORY_ADDRESS } from "./constants";
 import {
     IGetPoolDataQuery, IGetProtocolTvlQuery, IGetTickDataQuery, IGetTopPoolsQuery,
@@ -123,25 +123,29 @@ const GET_POOL_DATA = (pools: string[]) => {
 }
 
 export const getPoolData = async (pools: string[]) => {
-  return (await Client().query({ query: gql(GET_POOL_DATA(pools)) })).data as IGetPoolDataQuery
+  return (await UniswapClient().query({ query: gql(GET_POOL_DATA(pools)) }))
+    .data as IGetPoolDataQuery
 }
 
 export const getTickData = async (args: ITickArgs) => {
-  return (await Client().query({ query: gql(GET_TICK_DATA(args)) })).data as IGetTickDataQuery
+  return (await UniswapClient().query({ query: gql(GET_TICK_DATA(args)) }))
+    .data as IGetTickDataQuery
 }
 
 export const getTopPools = async () => {
-  return (await Client().query({ query: gql(GET_TOP_POOLS()) })).data as IGetTopPoolsQuery
+  return (await UniswapClient().query({ query: gql(GET_TOP_POOLS()) })).data as IGetTopPoolsQuery
 }
 
 export const getProtocolTVL = async () => {
-  return (await Client().query({ query: gql(GET_PROTOCOL_TVL()) })).data as IGetProtocolTvlQuery
+  return (await OrbitClient().query({ query: gql(GET_PROTOCOL_TVL()) }))
+    .data as IGetProtocolTvlQuery
 }
 
 export const getTopUsers = async () => {
-  return (await Client().query({ query: gql(GET_TOP_USERS()) })).data as IGetTopUsersQuery
+  return (await OrbitClient().query({ query: gql(GET_TOP_USERS()) })).data as IGetTopUsersQuery
 }
 
 export const getTopPositions = async () => {
-  return (await Client().query({ query: gql(GET_TOP_POSITIONS()) })).data as IGetTopPositionsQuery
+  return (await OrbitClient().query({ query: gql(GET_TOP_POSITIONS()) }))
+    .data as IGetTopPositionsQuery
 }
