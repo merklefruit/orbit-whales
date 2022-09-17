@@ -80,7 +80,7 @@ export default function NewHome() {
                   highlightOnHover
                   captionSide="bottom"
                 >
-                  <caption onClick={() => loadData({ llAllUsers: !isShowingAllUsers })}>
+                  <caption onClick={() => loadData({ showAllUsers: !isShowingAllUsers })}>
                     <Text size="sm" color="gray.7" style={{ cursor: 'pointer' }}>
                       {!loading
                         ? isShowingAllUsers
