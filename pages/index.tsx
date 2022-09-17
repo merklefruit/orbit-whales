@@ -1,287 +1,221 @@
-import { useAsyncMemo } from "use-async-memo";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ArrowClockwise } from "phosphor-react";
 
-import { Title } from "@mantine/core";
+import {
+    Accordion, Anchor, Box, Button, Container, Loader, Table, Text, Title
+} from "@mantine/core";
 
-import { useDegenScore } from "../hooks/useDegenScore";
-import { getProtocolTVL, getTopPositions, getTopUsers } from "../lib/queries";
+import { useAllData } from "../hooks/useAllData";
+import { formatDollars, shortenAddress } from "../lib/utils";
 
-import type { NextPage } from 'next'
-const Home: NextPage = () => {
-  const { getDegenScore } = useDegenScore()
-
-  const protocolTVL = useAsyncMemo(async () => {
-    const res = await getProtocolTVL()
-    return `$ ${+(+res?.positionManagerFactory?.protocolTVL).toFixed(2)}`
-  }, [])
-
-  const topUsers = useAsyncMemo(async () => {
-    const res = await getTopUsers()
-    return res?.positionManagers
-  }, [])
-
-  const topPositions = useAsyncMemo(async () => {
-    const res = await getTopPositions()
-    return res?.positions
-  }, [])
-
-  const degenScorePos = useAsyncMemo(async () => {
-    const res = await getDegenScore()
-    return res
-  }, [])
+export default function Home() {
+  const {
+    tvl,
+    topUsers,
+    degenScores,
+    topPositions,
+    usersCount,
+    loadData,
+    loading,
+    isShowingAllPositions,
+    isShowingAllUsers,
+  } = useAllData()
 
   return (
-    <div>
-      {protocolTVL && topUsers && topPositions && degenScorePos ? (
-        <main>
-          <Title order={1}>
-            Orbit{' '}
-            <a
-              href="https://development.orbitdefi.finance/"
-              target="_blank"
-              rel="noreferrer noopener"
-            >
-              Whales
-            </a>
-          </Title>
+    <Box>
+      <Box
+        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '3rem' }}
+      >
+        <Title
+          order={1}
+          sx={() => ({
+            fontSize: '3.5rem',
+            '@media (max-width: 755px)': {
+              fontSize: '2rem',
+            },
+          })}
+          color="blue.8"
+        >
+          Orbit Whales
+        </Title>
+      </Box>
 
-          <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
-            <h2 style={{ fontWeight: '700', fontSize: '1.4rem' }}>TVL: {protocolTVL} USD</h2>
-          </div>
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+        {tvl && topUsers && (
+          <Text size="xl" color="gray.7">
+            TVL: <span style={{ fontWeight: '600' }}>{tvl} USD</span> | USERS:{' '}
+            <span style={{ fontWeight: '600' }}>{usersCount}</span>
+          </Text>
+        )}
+      </Box>
 
-          <div
-            className="cont"
-            style={{
-              display: 'grid',
-              placeContent: 'center',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '1.5rem',
+      {tvl && topUsers && topPositions && degenScores ? (
+        <Container size="md" style={{ marginTop: '3rem', marginBottom: '5rem' }}>
+          <Box
+            sx={{
+              width: 'full',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'end',
+              paddingBottom: '1rem',
+              gap: '1rem',
             }}
           >
-            <div>
-              <div
-                style={{
-                  position: 'relative',
-                  borderRadius: '0.6rem',
-                  border: 'solid black 2px',
-                  padding: '1rem',
-                }}
-              >
-                <h2
-                  style={{
-                    position: 'absolute',
-                    top: '-1.8rem',
-                    left: '2rem',
-                    fontSize: '1.2rem',
-                    backgroundColor: 'white',
-                    padding: '0 0.3rem 0 0.1rem',
-                  }}
-                >
-                  Top 10 users
-                </h2>
-                <div style={{ width: '650px', paddingTop: '0.5rem' }}>
-                  {topUsers.map((pm, idx) => (
-                    <a
-                      key={idx}
-                      href={`https://polygonscan.com/address/${pm.user}`}
-                      className="position-link"
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      style={{
-                        textAlign: 'left',
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1.5rem',
-                        border: '1px solid lightgray',
-                        borderRadius: '0.5rem',
-                        padding: '0.5rem',
-                        marginBottom: '0.5rem',
-                        transition: 'all 0.2s ease-in-out',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'start',
-                          gap: '1.5rem',
-                        }}
-                      >
-                        <span>
-                          <span style={{ fontWeight: '700' }}>RANK: </span>
-                          {idx + 1}
-                        </span>
-                        <span>
-                          <span style={{ fontWeight: '700' }}>USER: </span>
-                          {pm.user.slice(0, 6)}...{pm.user.slice(-6)}
-                        </span>
-                      </div>
-                      <span style={{ width: '160px' }}>
-                        <span style={{ fontWeight: '700' }}>VALUE: </span> ${' '}
-                        {Number(pm.totalValueLocked).toFixed(2)}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <Button variant="outline" color="blue" onClick={() => loadData({ resetAll: true })}>
+              <ArrowClockwise size={22} />
+            </Button>
+          </Box>
 
-            <div>
-              <div
-                style={{
-                  position: 'relative',
-                  borderRadius: '0.6rem',
-                  border: 'solid black 2px',
-                  padding: '1rem',
-                }}
-              >
-                <h2
-                  style={{
-                    position: 'absolute',
-                    top: '-1.8rem',
-                    left: '2rem',
-                    fontSize: '1.2rem',
-                    backgroundColor: 'white',
-                    padding: '0 0.3rem 0 0.1rem',
-                  }}
+          <Accordion variant="separated" defaultValue="top-users-tvl">
+            <Accordion.Item value="top-users-tvl">
+              <Accordion.Control>
+                <Text size="lg" weight="bold" color="gray.7">
+                  Users by TVL
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Table
+                  verticalSpacing="sm"
+                  horizontalSpacing="xs"
+                  highlightOnHover
+                  captionSide="bottom"
                 >
-                  Top 10 positions
-                </h2>
-                <div style={{ width: '650px', paddingTop: '0.5rem' }}>
-                  {topPositions.map((pos, idx) => (
-                    <a
-                      key={idx}
-                      href={`https://app.uniswap.org/#/pool/${pos?.id}?chain=polygon`}
-                      className="position-link"
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      style={{
-                        textAlign: 'left',
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1.5rem',
-                        border: '1px solid lightgray',
-                        borderRadius: '0.5rem',
-                        padding: '0.5rem',
-                        marginBottom: '0.5rem',
-                        transition: 'all 0.2s ease-in-out',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'start',
-                          gap: '1.5rem',
-                        }}
-                      >
-                        <span>
-                          <span style={{ fontWeight: '700' }}>RANK: </span>
-                          {idx + 1}
-                        </span>
-                        <span>
-                          <span style={{ fontWeight: '700' }}>ID: </span> {pos?.id}
-                        </span>
-                        <span>
-                          <span style={{ fontWeight: '700' }}>POOL: </span> {pos.poolName}
-                        </span>
-                      </div>
-                      <span style={{ width: '160px' }}>
-                        <span style={{ fontWeight: '700' }}>VALUE: </span> ${' '}
-                        {+(+pos?.marketValueUSD).toFixed(2)}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
+                  <caption onClick={() => loadData({ showAllUsers: !isShowingAllUsers })}>
+                    <Text size="sm" color="gray.7" style={{ cursor: 'pointer' }}>
+                      {!loading
+                        ? isShowingAllUsers
+                          ? 'Show only top 10'
+                          : 'Show more'
+                        : 'Loading...'}
+                    </Text>
+                  </caption>
 
-            <div>
-              <div
-                style={{
-                  borderRadius: '0.6rem',
-                  border: 'solid black 2px',
-                  padding: '1rem',
-                  position: 'relative',
-                }}
-              >
-                <h2
-                  style={{
-                    position: 'absolute',
-                    top: '-1.8rem',
-                    left: '2rem',
-                    fontSize: '1.2rem',
-                    backgroundColor: 'white',
-                    padding: '0 0.3rem 0 0.1rem',
-                  }}
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Address</th>
+                      <th>TVL</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {topUsers.map((user, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <Anchor
+                            href={`https://polygonscan.com/address/${user.user}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {shortenAddress(user.user, 5)}
+                          </Anchor>
+                        </td>
+                        <td>{formatDollars(user.totalValueLocked)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Accordion.Panel>
+            </Accordion.Item>
+
+            <Accordion.Item value="top-users-degen">
+              <Accordion.Control>
+                <Text size="lg" weight="bold" color="gray.7">
+                  Active Users by Degen Score
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Table verticalSpacing="sm" horizontalSpacing="xs" highlightOnHover>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Address</th>
+                      <th>Degen Score</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {degenScores.map((user, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <Anchor
+                            href={`https://polygonscan.com/address/${user.user}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {shortenAddress(user.user, 5)}
+                          </Anchor>
+                        </td>
+                        <td>{user.totalDegen.toFixed(0)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Accordion.Panel>
+            </Accordion.Item>
+
+            <Accordion.Item value="top-positions">
+              <Accordion.Control>
+                <Text size="lg" weight="bold" color="gray.7">
+                  Positions by Value
+                </Text>
+              </Accordion.Control>
+              <Accordion.Panel>
+                <Table
+                  verticalSpacing="sm"
+                  horizontalSpacing="xs"
+                  highlightOnHover
+                  captionSide="bottom"
                 >
-                  Top 10 degens
-                </h2>
+                  <caption onClick={() => loadData({ showAllPositions: !isShowingAllPositions })}>
+                    <Text size="sm" color="gray.7" style={{ cursor: 'pointer' }}>
+                      {!loading
+                        ? isShowingAllPositions
+                          ? 'Show only top 10'
+                          : 'Show more'
+                        : 'Loading...'}
+                    </Text>
+                  </caption>
 
-                <div style={{ width: '650px', paddingTop: '0.5rem' }}>
-                  {degenScorePos.map((degenScore, idx) => (
-                    <a
-                      key={idx}
-                      href={`https://polygonscan.com/address/${degenScore.user}`}
-                      className="position-link"
-                      rel="noreferrer noopener"
-                      target="_blank"
-                      style={{
-                        textAlign: 'left',
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        gap: '1.5rem',
-                        border: '1px solid lightgray',
-                        borderRadius: '0.5rem',
-                        padding: '0.5rem',
-                        marginBottom: '0.5rem',
-                        transition: 'all 0.2s ease-in-out',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'start',
-                          gap: '1.5rem',
-                        }}
-                      >
-                        <span>
-                          <span style={{ fontWeight: '700' }}>RANK: </span>
-                          {idx + 1}
-                        </span>
-                        <span>
-                          <span style={{ fontWeight: '700' }}>USER: </span>
-                          {degenScore.user.slice(0, 6)}...
-                          {degenScore.user.slice(-6)}
-                        </span>
-                      </div>
-                      <span style={{ width: '190px' }}>
-                        <span style={{ fontWeight: '700' }}>DEGEN SCORE: </span>{' '}
-                        {degenScore.totalDegen.toFixed(3)}
-                      </span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>NFT Id</th>
+                      <th>Pool</th>
+                      <th>Value</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {topPositions.map((position, index) => (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>
+                          <Anchor
+                            href={`https://app.uniswap.org/#/pool/${position.id}?chain=polygon`}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {position.id}
+                          </Anchor>
+                        </td>
+                        <td>{position.poolName}</td>
+                        <td>{formatDollars(position.marketValueUSD)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        </Container>
       ) : (
-        <main>
-          <h1>Fetching data...</h1>
-        </main>
+        <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '5rem' }}>
+          <Loader variant="dots" />
+        </Box>
       )}
-    </div>
+    </Box>
   )
 }
-
-export default Home
