@@ -19,6 +19,7 @@ export default function Home() {
     loading,
     isShowingAllPositions,
     isShowingAllUsers,
+    lastUpdated,
   } = useAllData()
 
   return (
@@ -29,12 +30,12 @@ export default function Home() {
         <Title
           order={1}
           sx={() => ({
-            fontSize: '3.5rem',
+            fontSize: '3.8rem',
             '@media (max-width: 755px)': {
               fontSize: '2rem',
             },
           })}
-          color="blue.8"
+          color="gialloMotti"
         >
           Orbit Whales
         </Title>
@@ -42,7 +43,7 @@ export default function Home() {
 
       <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
         {tvl && topUsers && (
-          <Text size="xl" color="gray.7">
+          <Text size="xl" color="gialloMotti.1">
             TVL: <span style={{ fontWeight: '600' }}>{tvl} USD</span> | USERS:{' '}
             <span style={{ fontWeight: '600' }}>{usersCount}</span>
           </Text>
@@ -61,7 +62,11 @@ export default function Home() {
               gap: '1rem',
             }}
           >
-            <Button variant="outline" color="blue" onClick={() => loadData({ resetAll: true })}>
+            <Button
+              variant="outline"
+              color="gialloMotti"
+              onClick={() => loadData({ resetAll: true })}
+            >
               <ArrowClockwise size={22} />
             </Button>
           </Box>
@@ -69,7 +74,7 @@ export default function Home() {
           <Accordion variant="separated" defaultValue="top-users-tvl">
             <Accordion.Item value="top-users-tvl">
               <Accordion.Control>
-                <Text size="lg" weight="bold" color="gray.7">
+                <Text size="lg" weight="bold" color="gialloMotti">
                   Users by TVL
                 </Text>
               </Accordion.Control>
@@ -81,7 +86,7 @@ export default function Home() {
                   captionSide="bottom"
                 >
                   <caption onClick={() => loadData({ showAllUsers: !isShowingAllUsers })}>
-                    <Text size="sm" color="gray.7" style={{ cursor: 'pointer' }}>
+                    <Text size="sm" color="gialloMotti" style={{ cursor: 'pointer' }}>
                       {!loading
                         ? isShowingAllUsers
                           ? 'Show only top 10'
@@ -105,6 +110,7 @@ export default function Home() {
                         <td>
                           <Anchor
                             href={`https://polygonscan.com/address/${user.user}`}
+                            color="gialloMotti"
                             target="_blank"
                             rel="noopener noreferrer"
                           >
@@ -121,7 +127,7 @@ export default function Home() {
 
             <Accordion.Item value="top-users-degen">
               <Accordion.Control>
-                <Text size="lg" weight="bold" color="gray.7">
+                <Text size="lg" weight="bold" color="gialloMotti">
                   Active Users by Degen Score
                 </Text>
               </Accordion.Control>
@@ -143,6 +149,7 @@ export default function Home() {
                           <Anchor
                             href={`https://polygonscan.com/address/${user.user}`}
                             target="_blank"
+                            color="gialloMotti"
                             rel="noopener noreferrer"
                           >
                             {shortenAddress(user.user, 5)}
@@ -158,7 +165,7 @@ export default function Home() {
 
             <Accordion.Item value="top-positions">
               <Accordion.Control>
-                <Text size="lg" weight="bold" color="gray.7">
+                <Text size="lg" weight="bold" color="gialloMotti">
                   Positions by Value
                 </Text>
               </Accordion.Control>
@@ -170,7 +177,7 @@ export default function Home() {
                   captionSide="bottom"
                 >
                   <caption onClick={() => loadData({ showAllPositions: !isShowingAllPositions })}>
-                    <Text size="sm" color="gray.7" style={{ cursor: 'pointer' }}>
+                    <Text size="sm" color="gialloMotti" style={{ cursor: 'pointer' }}>
                       {!loading
                         ? isShowingAllPositions
                           ? 'Show only top 10'
@@ -196,6 +203,7 @@ export default function Home() {
                           <Anchor
                             href={`https://app.uniswap.org/#/pool/${position.id}?chain=polygon`}
                             rel="noopener noreferrer"
+                            color="gialloMotti"
                             target="_blank"
                           >
                             {position.id}
@@ -210,10 +218,16 @@ export default function Home() {
               </Accordion.Panel>
             </Accordion.Item>
           </Accordion>
+
+          <Box sx={{ width: '100%', marginTop: '1rem', textAlign: 'center' }}>
+            <Text size="sm" color="gialloMotti">
+              Last updated: {lastUpdated}
+            </Text>
+          </Box>
         </Container>
       ) : (
         <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: '5rem' }}>
-          <Loader variant="dots" />
+          <Loader variant="dots" color="gialloMotti" />
         </Box>
       )}
     </Box>

@@ -14,7 +14,7 @@ export const useAllData = () => {
   const [degenScores, setDegenScores] = useState<IDegenScore[]>()
   const [topPositions, setTopPositions] = useState<IPositions>()
   const [usersCount, setUsersCount] = useState<number | undefined>()
-
+  const [lastUpdated, setLastUpdated] = useState<string | undefined>()
   const [isShowingAllUsers, setIsShowingAllUsers] = useState(false)
   const [isShowingAllPositions, setIsShowingAllPositions] = useState(false)
 
@@ -50,6 +50,7 @@ export const useAllData = () => {
     setIsShowingAllUsers(!!params.showAllUsers)
 
     setLoading(false)
+    setLastUpdated(new Date().toLocaleString())
   }, [])
 
   useEffect(() => {
@@ -64,6 +65,7 @@ export const useAllData = () => {
     usersCount,
     loadData,
     loading,
+    lastUpdated,
     isShowingAllUsers,
     isShowingAllPositions,
   }

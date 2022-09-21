@@ -1,10 +1,29 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
 
-import { MantineProvider } from "@mantine/core";
+import { MantineProvider, MantineTheme, MantineThemeOverride } from "@mantine/core";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props
+
+  const theme: MantineThemeOverride = {
+    colorScheme: 'dark',
+    fontFamily: 'Open Sans, sans-serif',
+    headings: { fontFamily: 'Bungee Shade, cursive' },
+    colors: {
+      gialloMotti: [
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+        '#f9d71c',
+      ],
+    },
+  }
 
   return (
     <>
@@ -15,15 +34,7 @@ export default function App(props: AppProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          colorScheme: 'light',
-          fontFamily: 'Open Sans, sans-serif',
-          headings: { fontFamily: 'Bungee Shade, cursive' },
-        }}
-      >
+      <MantineProvider withGlobalStyles withNormalizeCSS theme={theme}>
         <Component {...pageProps} />
       </MantineProvider>
     </>
